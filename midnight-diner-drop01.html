@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Midnight Diner — Drop 01</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital@0;1&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #080808;
+      --off-white: #f0ece4;
+      --warm-gray: #888;
+      --accent: #c8c0b0;
+      --dim: #3a3a3a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--off-white);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 40px;
+      mix-blend-mode: normal;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      text-transform: uppercase;
+      color: var(--off-white);
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--warm-gray);
+      text-decoration: none;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .nav-link:hover { color: var(--off-white); }
+
+    /* ── HERO DROP HEADER ── */
+    .drop-header {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .drop-header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(200, 169, 110, 0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .drop-eyebrow {
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .drop-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 12vw, 160px);
+      font-weight: 400;
+      line-height: 0.9;
+      color: var(--off-white);
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.4s;
+    }
+
+    .drop-title span {
+      display: block;
+      font-style: normal;
+      color: var(--warm-gray);
+      font-size: 0.45em;
+      letter-spacing: 0.15em;
+      margin-top: 16px;
+    }
+
+    .drop-meta {
+      margin-top: 48px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.7s;
+    }
+
+    .drop-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .meta-label {
+      font-size: 8px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .meta-value {
+      font-size: 11px;
+      color: var(--warm-gray);
+      letter-spacing: 0.1em;
+    }
+
+    .meta-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--dim);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      right: 40px;
+      writing-mode: vertical-rl;
+      font-size: 8px;
+      letter-spacing: 0.3em;
+      color: var(--dim);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 1.2s;
+    }
+
+    /* large background text */
+    .bg-text {
+      position: absolute;
+      top: 50%;
+      right: -20px;
+      transform: translateY(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      color: rgba(255,255,255,0.015);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      padding: 60px 40px 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--dim);
+    }
+
+    .section-label span {
+      font-size: 8px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--dim);
+      white-space: nowrap;
+    }
+
+    /* ── PRODUCT GRID ── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      padding: 0 40px 120px;
+    }
+
+    .product-card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      background: #111;
+      cursor: crosshair;
+    }
+
+    .product-card:first-child {
+      grid-column: 1 / 3;
+      aspect-ratio: auto;
+      min-height: 560px;
+    }
+
+    /* product visual — stylized placeholder */
+    .product-visual {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* hoodie */
+    .card-1 .product-visual {
+      background: linear-gradient(160deg, #141210 0%, #1c1814 50%, #0f0e0c 100%);
+    }
+
+    /* crewneck */
+    .card-2 .product-visual {
+      background: linear-gradient(160deg, #0e1012 0%, #141618 50%, #0c0d0f 100%);
+    }
+
+    /* longsleeve */
+    .card-3 .product-visual {
+      background: linear-gradient(160deg, #101010 0%, #181614 50%, #0c0b0a 100%);
+    }
+
+    /* garment silhouettes via CSS */
+    .silhouette {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hoodie-shape {
+      width: 55%;
+      height: 70%;
+    }
+
+    .crew-shape {
+      width: 65%;
+      height: 65%;
+    }
+
+    .ls-shape {
+      width: 60%;
+      height: 65%;
+    }
+
+    .garment-svg {
+      width: 100%;
+      height: 100%;
+      opacity: 0.18;
+      filter: drop-shadow(0 0 40px rgba(200,169,110,0.08));
+      transition: opacity 0.5s ease;
+    }
+
+    .product-card:hover .garment-svg {
+      opacity: 0.28;
+    }
+
+    /* ambient light blob */
+    .light-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      opacity: 0.4;
+    }
+
+    .card-1 .light-blob {
+      width: 300px; height: 300px;
+      background: rgba(200, 169, 110, 0.06);
+      top: 20%; left: 30%;
+    }
+
+    .card-2 .light-blob {
+      width: 200px; height: 200px;
+      background: rgba(200, 169, 110, 0.05);
+      top: 30%; left: 20%;
+    }
+
+    .card-3 .light-blob {
+      width: 200px; height: 200px;
+      background: rgba(180, 160, 120, 0.04);
+      top: 25%; left: 25%;
+    }
+
+    .product-card:hover .light-blob { opacity: 0.8; }
+
+    /* product info overlay */
+    .product-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 28px;
+      background: linear-gradient(transparent, rgba(10,10,10,0.95));
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .product-name {
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 0.05em;
+      line-height: 1.1;
+      color: var(--off-white);
+    }
+
+    .product-card:first-child .product-name {
+      font-size: 32px;
+    }
+
+    .product-sub {
+      font-size: 8px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-top: 6px;
+    }
+
+    .product-status {
+      text-align: right;
+    }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 7px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(200,169,110,0.3);
+      padding: 5px 10px;
+      margin-bottom: 8px;
+    }
+
+    .product-price {
+      display: block;
+      font-size: 13px;
+      color: var(--warm-gray);
+      letter-spacing: 0.1em;
+    }
+
+    /* hover overlay */
+    .card-hover-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(200,169,110,0.03);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .product-card:hover .card-hover-overlay { opacity: 1; }
+
+    /* top-left tag */
+    .card-tag {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 7px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    /* ── NOTIFY SECTION ── */
+    .notify-section {
+      border-top: 1px solid var(--dim);
+      padding: 80px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .notify-left {
+      max-width: 440px;
+    }
+
+    .notify-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 38px;
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .notify-sub {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--warm-gray);
+      line-height: 1.8;
+    }
+
+    .notify-form {
+      display: flex;
+      gap: 0;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .notify-input {
+      flex: 1;
+      background: transparent;
+      border: 1px solid var(--dim);
+      border-right: none;
+      padding: 14px 18px;
+      color: var(--off-white);
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.1em;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .notify-input::placeholder {
+      color: var(--dim);
+      letter-spacing: 0.2em;
+    }
+
+    .notify-input:focus { border-color: var(--warm-gray); }
+
+    .notify-btn {
+      background: var(--off-white);
+      color: var(--black);
+      border: 1px solid var(--off-white);
+      padding: 14px 24px;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      white-space: nowrap;
+    }
+
+    .notify-btn:hover {
+      background: transparent;
+      color: var(--off-white);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(58,53,48,0.5);
+    }
+
+    footer span {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* cards animate in on load */
+    .product-card {
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .card-1 { animation-delay: 0.9s; }
+    .card-2 { animation-delay: 1.05s; }
+    .card-3 { animation-delay: 1.15s; }
+
+    .notify-section {
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1.3s;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+
+      .drop-header { padding: 0 24px 60px; }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+        padding: 0 24px 80px;
+        gap: 2px;
+      }
+
+      .product-card:first-child {
+        grid-column: auto;
+        min-height: 420px;
+      }
+
+      .notify-section {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 60px 24px;
+      }
+
+      .notify-form { max-width: 100%; width: 100%; }
+
+      footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Midnight Diner</a>
+    <div class="nav-right">
+      <a href="#" class="nav-link">Est. 1991</a>
+      <a href="#" class="nav-link">Drop 01</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="drop-header">
+    <div class="bg-text">01</div>
+
+    <div class="drop-eyebrow">Drop 01 — Limited</div>
+    <h1 class="drop-title">
+      After<br>Hours
+      <span>Something to wear into the night</span>
+    </h1>
+
+    <div class="drop-meta">
+      <div class="drop-meta-item">
+        <span class="meta-label">Release</span>
+        <span class="meta-value">Coming Soon</span>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="drop-meta-item">
+        <span class="meta-label">Pieces</span>
+        <span class="meta-value">3 styles</span>
+      </div>
+      <div class="meta-divider"></div>
+      <div class="drop-meta-item">
+        <span class="meta-label">Run</span>
+        <span class="meta-value">Limited</span>
+      </div>
+    </div>
+
+    <div class="scroll-hint">Scroll ↓</div>
+  </section>
+
+  <!-- SECTION LABEL -->
+  <div class="section-label"><span>The pieces</span></div>
+
+  <!-- PRODUCT GRID -->
+  <div class="product-grid">
+
+    <!-- Card 1: Hoodie (large) -->
+    <div class="product-card card-1">
+      <div class="product-visual">
+        <div class="light-blob"></div>
+        <div class="silhouette hoodie-shape">
+          <svg class="garment-svg" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- hoodie silhouette -->
+            <path d="M70 20 C70 20 60 22 50 30 L20 60 L10 100 L30 105 L32 80 L32 200 L168 200 L168 80 L170 105 L190 100 L180 60 L150 30 C140 22 130 20 130 20 C125 28 115 34 100 34 C85 34 75 28 70 20Z" fill="currentColor"/>
+            <!-- hood -->
+            <path d="M70 20 C70 10 75 2 100 0 C125 2 130 10 130 20" fill="currentColor" stroke="currentColor" stroke-width="0.5"/>
+            <!-- pocket -->
+            <rect x="68" y="130" width="64" height="4" rx="2" fill="rgba(0,0,0,0.3)"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-hover-overlay"></div>
+      <span class="card-tag">MD-001</span>
+      <div class="product-info">
+        <div>
+          <div class="product-name">Heavy Hoodie</div>
+          <div class="product-sub">Heavyweight fleece — Washed black</div>
+        </div>
+        <div class="product-status">
+          <div class="status-badge">Notify me</div>
+          <span class="product-price">— —</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Crewneck -->
+    <div class="product-card card-2">
+      <div class="product-visual">
+        <div class="light-blob"></div>
+        <div class="silhouette crew-shape">
+          <svg class="garment-svg" viewBox="0 0 200 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- crewneck silhouette -->
+            <path d="M72 18 C72 18 58 22 44 34 L14 68 L8 105 L30 110 L32 85 L32 200 L168 200 L168 85 L170 110 L192 105 L186 68 L156 34 C142 22 128 18 128 18 C122 26 112 30 100 30 C88 30 78 26 72 18Z" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-hover-overlay"></div>
+      <span class="card-tag">MD-002</span>
+      <div class="product-info">
+        <div>
+          <div class="product-name">Crewneck</div>
+          <div class="product-sub">Midweight — Faded slate</div>
+        </div>
+        <div class="product-status">
+          <div class="status-badge">Notify me</div>
+          <span class="product-price">— —</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Long Sleeve -->
+    <div class="product-card card-3">
+      <div class="product-visual">
+        <div class="light-blob"></div>
+        <div class="silhouette ls-shape">
+          <svg class="garment-svg" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- long sleeve tee -->
+            <path d="M78 15 C78 15 64 20 48 36 L10 72 L6 110 L32 115 L34 88 L34 205 L166 205 L166 88 L168 115 L194 110 L190 72 L152 36 C136 20 122 15 122 15 C118 22 110 26 100 26 C90 26 82 22 78 15Z" fill="currentColor"/>
+            <!-- crew neck -->
+            <ellipse cx="100" cy="20" rx="22" ry="8" fill="rgba(0,0,0,0.2)" stroke="currentColor" stroke-width="0.5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-hover-overlay"></div>
+      <span class="card-tag">MD-003</span>
+      <div class="product-info">
+        <div>
+          <div class="product-name">Long Sleeve</div>
+          <div class="product-sub">Cotton — Off white / Bone</div>
+        </div>
+        <div class="product-status">
+          <div class="status-badge">Notify me</div>
+          <span class="product-price">— —</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NOTIFY -->
+  <section class="notify-section">
+    <div class="notify-left">
+      <div class="notify-title">If you know,<br>you know.</div>
+      <div class="notify-sub">
+        Drop 01 drops when it's ready.<br>
+        Leave your email and we'll find you.
+      </div>
+    </div>
+    <div class="notify-form">
+      <input class="notify-input" type="email" placeholder="your@email.com" />
+      <button class="notify-btn">Notify</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>Midnight Diner © 1991–</span>
+    <span>Drop 01 — Prototype</span>
+    <span>Made at night</span>
+  </footer>
+
+</body>
+</html>
