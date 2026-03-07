@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MIDNIGHT DINER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital@0;1&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #080808;
+      --white: #f0ece4;
+      --grey-dark: #1a1a1a;
+      --grey-mid: #3a3a3a;
+      --grey-light: #888;
+      --accent: #c8c0b0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Share Tech Mono', monospace;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--white);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+      mix-blend-mode: difference;
+    }
+    .cursor.expand { width: 40px; height: 40px; opacity: 0.4; }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.045;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 3rem;
+      mix-blend-mode: difference;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.3em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--grey-light);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3rem 4rem;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 40%, #1e1e1e 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, #141414 0%, transparent 50%),
+        var(--black);
+      z-index: 0;
+    }
+
+    /* Halftone grid */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, #333 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.18;
+    }
+
+    .hero-tag {
+      position: absolute;
+      top: 50%;
+      right: 3rem;
+      transform: translateY(-50%) rotate(90deg);
+      transform-origin: center;
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      color: var(--grey-mid);
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .hero-year {
+      position: absolute;
+      top: 50%;
+      left: 3rem;
+      transform: translateY(-50%) rotate(-90deg);
+      transform-origin: center;
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      color: var(--grey-mid);
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.6rem;
+      letter-spacing: 0.5em;
+      color: var(--grey-light);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 14vw, 14rem);
+      line-height: 0.88;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp 1s ease 0.5s forwards;
+    }
+
+    .hero-title span {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--grey-mid);
+    }
+
+    .hero-sub {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.8s forwards;
+    }
+
+    .hero-sub p {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--grey-light);
+      max-width: 280px;
+      line-height: 1.8;
+    }
+
+    .hero-line {
+      width: 80px;
+      height: 1px;
+      background: var(--grey-mid);
+      flex-shrink: 0;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 2;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.5s forwards;
+    }
+
+    .hero-scroll span {
+      font-size: 0.55rem;
+      letter-spacing: 0.4em;
+      color: var(--grey-mid);
+      text-transform: uppercase;
+    }
+
+    .scroll-bar {
+      width: 1px;
+      height: 50px;
+      background: var(--grey-mid);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-bar::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--white);
+      animation: scrollDown 1.8s ease infinite;
+    }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--grey-dark);
+      border-bottom: 1px solid var(--grey-dark);
+      padding: 1rem 0;
+      background: var(--black);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      width: max-content;
+      animation: marquee 18s linear infinite;
+    }
+
+    .marquee-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.3em;
+      color: var(--grey-mid);
+      padding: 0 2rem;
+      white-space: nowrap;
+    }
+
+    .marquee-item.accent { color: var(--accent); }
+
+    /* ABOUT SECTION */
+    .section-about {
+      padding: 10rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .about-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.5em;
+      color: var(--grey-light);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .about-label::before {
+      content: '';
+      width: 30px;
+      height: 1px;
+      background: var(--grey-mid);
+    }
+
+    .about-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1.2;
+      color: var(--white);
+      margin-bottom: 2rem;
+    }
+
+    .about-body {
+      font-size: 0.75rem;
+      line-height: 2.2;
+      color: var(--grey-light);
+      letter-spacing: 0.05em;
+    }
+
+    .about-body p + p { margin-top: 1.2rem; }
+
+    .about-visual {
+      position: relative;
+      height: 500px;
+    }
+
+    .about-box {
+      position: absolute;
+      border: 1px solid var(--grey-dark);
+    }
+
+    .about-box:nth-child(1) {
+      inset: 0;
+      background: var(--grey-dark);
+      background-image: radial-gradient(circle at 30% 70%, #222 0%, #0f0f0f 100%);
+    }
+
+    .about-box:nth-child(2) {
+      width: 60%;
+      height: 60%;
+      bottom: -2rem;
+      right: -2rem;
+      border-color: var(--grey-mid);
+      background: transparent;
+    }
+
+    .about-box:nth-child(3) {
+      width: 40%;
+      height: 40%;
+      top: -1.5rem;
+      left: -1.5rem;
+      border-color: var(--grey-dark);
+      background: transparent;
+    }
+
+    .about-num {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 6rem;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--grey-dark);
+      line-height: 1;
+      z-index: 1;
+    }
+
+    /* PILLARS */
+    .section-pillars {
+      padding: 6rem 3rem;
+      border-top: 1px solid var(--grey-dark);
+    }
+
+    .pillars-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .pillars-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      letter-spacing: 0.05em;
+      color: var(--white);
+    }
+
+    .pillars-note {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--grey-light);
+      text-transform: uppercase;
+      text-align: right;
+      line-height: 2;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-left: 1px solid var(--grey-dark);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pillar {
+      padding: 3rem 2.5rem;
+      border-right: 1px solid var(--grey-dark);
+      border-bottom: 1px solid var(--grey-dark);
+      position: relative;
+      transition: background 0.4s;
+    }
+
+    .pillar:hover { background: var(--grey-dark); }
+
+    .pillar-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
+      color: var(--grey-mid);
+      margin-bottom: 2rem;
+    }
+
+    .pillar-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.6rem;
+      color: var(--white);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .pillar-text {
+      font-size: 0.7rem;
+      color: var(--grey-light);
+      line-height: 2;
+      letter-spacing: 0.05em;
+    }
+
+    .pillar-arrow {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-size: 1.2rem;
+      color: var(--grey-mid);
+      transition: transform 0.3s, color 0.3s;
+    }
+
+    .pillar:hover .pillar-arrow {
+      transform: translate(4px, -4px);
+      color: var(--white);
+    }
+
+    /* MANIFESTO */
+    .section-manifesto {
+      padding: 12rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .manifesto-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, #141414 0%, var(--black) 70%);
+    }
+
+    .manifesto-quote {
+      position: relative;
+      z-index: 2;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.5rem, 3.5vw, 3rem);
+      line-height: 1.5;
+      color: var(--white);
+      max-width: 800px;
+      margin: 0 auto 3rem;
+    }
+
+    .manifesto-quote::before {
+      content: '\201C';
+      font-size: 8rem;
+      color: var(--grey-dark);
+      position: absolute;
+      top: -3rem;
+      left: -2rem;
+      font-style: normal;
+      line-height: 1;
+      z-index: -1;
+    }
+
+    .manifesto-source {
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      color: var(--grey-mid);
+      text-transform: uppercase;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* CTA */
+    .section-cta {
+      padding: 8rem 3rem;
+      border-top: 1px solid var(--grey-dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .cta-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 6vw, 7rem);
+      line-height: 0.9;
+      color: var(--white);
+    }
+
+    .cta-title span {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--grey-mid);
+    }
+
+    .cta-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: flex-end;
+    }
+
+    .cta-email {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--grey-light);
+      text-transform: uppercase;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 2rem;
+      border: 1px solid var(--white);
+      color: var(--white);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: transparent;
+      cursor: none;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--white);
+      transform: translateX(-101%);
+      transition: transform 0.3s ease;
+    }
+
+    .btn:hover::before { transform: translateX(0); }
+
+    .btn:hover { color: var(--black); }
+
+    .btn span { position: relative; z-index: 1; }
+
+    /* FOOTER */
+    footer {
+      padding: 3rem;
+      border-top: 1px solid var(--grey-dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.4em;
+      color: var(--grey-mid);
+    }
+
+    .footer-copy {
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      color: var(--grey-mid);
+      text-transform: uppercase;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes scrollDown {
+      0%   { top: -100%; }
+      100% { top: 100%; }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Midnight Diner</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#pillars">Work</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-tag">Fashion · Music · Culture</div>
+    <div class="hero-year">Est. 2025</div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">// No signal. No rules. No closing time.</p>
+      <h1 class="hero-title">
+        Midnight
+        <span>Diner</span>
+      </h1>
+      <div class="hero-sub">
+        <div class="hero-line"></div>
+        <p>Where the last song bleeds into the first light. Fashion and sound as one raw frequency.</p>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-bar"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Midnight Diner</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">Fashion</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">Music</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">Raw Culture</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">After Hours</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">No Signal</span>
+      <span class="marquee-item accent">✦</span>
+      <!-- duplicate for seamless loop -->
+      <span class="marquee-item">Midnight Diner</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">Fashion</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">Music</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">Raw Culture</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">After Hours</span>
+      <span class="marquee-item accent">✦</span>
+      <span class="marquee-item">No Signal</span>
+      <span class="marquee-item accent">✦</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="section-about" id="about">
+    <div class="reveal">
+      <div class="about-label">About the project</div>
+      <h2 class="about-title">Born in the space between the last track and the walk home.</h2>
+      <div class="about-body">
+        <p>Midnight Diner is a fashion and music project built on the edges — where texture matters more than polish, and what you wear and what you hear are the same conversation.</p>
+        <p>Not a brand in the traditional sense. A frequency. Something you tune into when everything else feels like noise.</p>
+      </div>
+    </div>
+    <div class="about-visual reveal reveal-delay-1">
+      <div class="about-box"></div>
+      <div class="about-box"></div>
+      <div class="about-box"></div>
+      <div class="about-num">MD</div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="section-pillars" id="pillars">
+    <div class="pillars-header">
+      <h2 class="pillars-title reveal">What We Do</h2>
+      <p class="pillars-note reveal reveal-delay-1">Three pillars.<br>One voice.</p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar reveal">
+        <div class="pillar-num">01 —</div>
+        <h3 class="pillar-title">Sound</h3>
+        <p class="pillar-text">Original music that doesn't ask permission. Rock, soul, funk — whatever the night calls for. Recorded raw, released without apology.</p>
+        <span class="pillar-arrow">→</span>
+      </div>
+      <div class="pillar reveal reveal-delay-1">
+        <div class="pillar-num">02 —</div>
+        <h3 class="pillar-title">Garments</h3>
+        <p class="pillar-text">Limited pieces built for people who move through the world at their own tempo. No seasons. No trends. Just things worth wearing.</p>
+        <span class="pillar-arrow">→</span>
+      </div>
+      <div class="pillar reveal reveal-delay-2">
+        <div class="pillar-num">03 —</div>
+        <h3 class="pillar-title">Culture</h3>
+        <p class="pillar-text">Visual work, events, collaborations — everything that happens when music and fashion stop being separate things and start being a lifestyle.</p>
+        <span class="pillar-arrow">→</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="section-manifesto">
+    <div class="manifesto-bg"></div>
+    <p class="manifesto-quote reveal">
+      The diner is always open. The sign is always on. Come in when the rest of the world has closed.
+    </p>
+    <p class="manifesto-source reveal reveal-delay-1">— Midnight Diner Manifesto</p>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-cta" id="contact">
+    <div class="cta-title reveal">
+      Stay in<br>
+      <span>the dark</span>
+    </div>
+    <div class="cta-right reveal reveal-delay-1">
+      <p class="cta-email">Drops. Releases. Signals.</p>
+      <a href="mailto:info@midnightdiner.com" class="btn">
+        <span>Get in touch →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">Midnight Diner</span>
+    <span class="footer-copy">© 2025 — All rights reserved</span>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, .pillar, .btn').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
