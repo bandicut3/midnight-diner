@@ -161,19 +161,12 @@
     }
 
     .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(5rem, 14vw, 14rem);
       line-height: 0.88;
       letter-spacing: -0.01em;
       color: var(--white);
       opacity: 0;
       animation: fadeUp 1s ease 0.5s forwards;
-    }
-
-    .hero-title span {
-      display: block;
-      color: transparent;
-      -webkit-text-stroke: 1px var(--grey-mid);
+      margin-bottom: 0;
     }
 
     .hero-sub {
@@ -632,7 +625,9 @@
 
   <!-- NAV -->
   <nav>
-    <a href="#" class="nav-logo">Midnight Diner</a>
+    <a href="#" class="nav-logo">
+      <img src="logo.png" alt="Midnight Diner" style="height:32px; width:auto; display:block;" />
+    </a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#pillars">Work</a></li>
@@ -644,13 +639,12 @@
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-tag">Fashion · Music · Culture</div>
-    <div class="hero-year">Est. 2025</div>
+    <div class="hero-year">Est. 1991</div>
     <div class="hero-content">
       <p class="hero-eyebrow">// No signal. No rules. No closing time.</p>
-      <h1 class="hero-title">
-        Midnight
-        <span>Diner</span>
-      </h1>
+        <div class="hero-title">
+        <img src="logo.png" alt="Midnight Diner" style="width: min(680px, 85vw); height: auto; display:block; filter: brightness(1);" />
+      </div>
       <div class="hero-sub">
         <div class="hero-line"></div>
         <p>Where the last song bleeds into the first light. Fashion and sound as one raw frequency.</p>
@@ -756,7 +750,7 @@
     </div>
     <div class="cta-right reveal reveal-delay-1">
       <p class="cta-email">Drops. Releases. Signals.</p>
-      <a href="mailto:info@midnightdiner.com" class="btn">
+      <a href="/cdn-cgi/l/email-protection#9af3f4fcf5daf7f3fef4f3fdf2eefef3f4ffe8b4f9f5f7" class="btn">
         <span>Get in touch →</span>
       </a>
     </div>
@@ -768,7 +762,7 @@
     <span class="footer-copy">© 2025 — All rights reserved</span>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Custom cursor
     const cursor = document.getElementById('cursor');
     document.addEventListener('mousemove', e => {
@@ -785,11 +779,4 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  </script>
-</body>
-</html>
+   
