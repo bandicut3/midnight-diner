@@ -161,12 +161,19 @@
     }
 
     .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 14vw, 14rem);
       line-height: 0.88;
       letter-spacing: -0.01em;
       color: var(--white);
       opacity: 0;
       animation: fadeUp 1s ease 0.5s forwards;
-      margin-bottom: 0;
+    }
+
+    .hero-title span {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--grey-mid);
     }
 
     .hero-sub {
@@ -625,9 +632,7 @@
 
   <!-- NAV -->
   <nav>
-    <a href="#" class="nav-logo">
-      <img src="logo.png" alt="Midnight Diner" style="height:32px; width:auto; display:block;" />
-    </a>
+    <a href="#" class="nav-logo">Midnight Diner</a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#pillars">Work</a></li>
@@ -642,9 +647,10 @@
     <div class="hero-year">Est. 1991</div>
     <div class="hero-content">
       <p class="hero-eyebrow">// No signal. No rules. No closing time.</p>
-        <div class="hero-title">
-        <img src="logo.png" alt="Midnight Diner" style="width: min(680px, 85vw); height: auto; display:block; filter: brightness(1);" />
-      </div>
+        <h1 class="hero-title">
+        Midnight
+        <span>Diner</span>
+      </h1>
       <div class="hero-sub">
         <div class="hero-line"></div>
         <p>Where the last song bleeds into the first light. Fashion and sound as one raw frequency.</p>
