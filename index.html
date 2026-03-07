@@ -590,7 +590,306 @@
       text-transform: uppercase;
     }
 
-    /* ANIMATIONS */
+    /* DROP SECTION */
+    .section-drop {
+      padding: 10rem 3rem;
+      border-top: 1px solid var(--grey-dark);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .drop-header {
+      margin-bottom: 5rem;
+    }
+
+    .drop-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 6vw, 6rem);
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .drop-title em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--grey-mid);
+    }
+
+    .drop-sub {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--grey-light);
+      text-transform: uppercase;
+    }
+
+    .drop-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .drop-item {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .drop-thumb {
+      position: relative;
+      aspect-ratio: 3/4;
+      background: var(--grey-dark);
+      border: 1px solid #222;
+      overflow: hidden;
+    }
+
+    .drop-thumb-inner {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 30%, #2a2a2a 0%, #111 100%);
+      background-image: radial-gradient(circle, #2a2a2a 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.5;
+    }
+
+    .drop-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--black);
+      background: var(--white);
+      padding: 0.3rem 0.7rem;
+      text-transform: uppercase;
+    }
+
+    .drop-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .drop-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--white);
+    }
+
+    .drop-status {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--grey-mid);
+    }
+
+    /* LOOKBOOK */
+    .section-lookbook {
+      padding: 8rem 3rem;
+      border-top: 1px solid var(--grey-dark);
+    }
+
+    .lookbook-header {
+      max-width: 1200px;
+      margin: 0 auto 4rem;
+    }
+
+    .lookbook-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 6vw, 6rem);
+      color: var(--white);
+      line-height: 0.95;
+    }
+
+    .lookbook-title em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--grey-mid);
+    }
+
+    .lookbook-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 300px 300px;
+      gap: 0.8rem;
+      max-width: 1200px;
+      margin: 0 auto 2rem;
+    }
+
+    .lookbook-cell {
+      background: var(--grey-dark);
+      border: 1px solid #1e1e1e;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .lookbook-cell.tall {
+      grid-row: span 2;
+    }
+
+    .lookbook-cell.wide {
+      grid-column: span 2;
+    }
+
+    .lookbook-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .lookbook-col .lookbook-cell {
+      flex: 1;
+    }
+
+    .lookbook-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.2rem;
+      background: radial-gradient(ellipse at 60% 40%, #222 0%, #0d0d0d 100%);
+      transition: background 0.4s;
+    }
+
+    .lookbook-cell:hover .lookbook-inner {
+      background: radial-gradient(ellipse at 60% 40%, #2a2a2a 0%, #111 100%);
+    }
+
+    .lookbook-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      color: var(--grey-dark);
+      transition: color 0.3s;
+    }
+
+    .lookbook-cell:hover .lookbook-num {
+      color: var(--grey-mid);
+    }
+
+    .lookbook-note {
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--grey-mid);
+      text-align: right;
+    }
+
+    /* EMAIL */
+    .section-email {
+      padding: 10rem 3rem;
+      border-top: 1px solid var(--grey-dark);
+      background: radial-gradient(ellipse at center, #141414 0%, var(--black) 70%);
+    }
+
+    .email-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .email-eyebrow {
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      color: var(--grey-mid);
+      margin-bottom: 1.5rem;
+    }
+
+    .email-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 5vw, 5.5rem);
+      line-height: 0.9;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+
+    .email-title span {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--grey-mid);
+    }
+
+    .email-body {
+      font-size: 0.7rem;
+      line-height: 2;
+      color: var(--grey-light);
+      letter-spacing: 0.05em;
+    }
+
+    .email-form {
+      display: flex;
+      border: 1px solid var(--grey-mid);
+      margin-bottom: 1rem;
+    }
+
+    .email-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 1.1rem 1.5rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+    }
+
+    .email-input::placeholder { color: var(--grey-mid); }
+
+    .email-btn {
+      background: var(--white);
+      border: none;
+      padding: 1rem 1.8rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--black);
+      cursor: none;
+      transition: background 0.3s, color 0.3s;
+      white-space: nowrap;
+    }
+
+    .email-btn:hover {
+      background: var(--accent);
+    }
+
+    .email-fine {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--grey-mid);
+      text-transform: uppercase;
+    }
+
+    .email-confirm {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-top: 0.5rem;
+      min-height: 1.2em;
+    }
+
+    /* FOOTER UPDATE */
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-links a {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--grey-mid);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: var(--white); }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(30px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -748,24 +1047,100 @@
     <p class="manifesto-source reveal reveal-delay-1">— Midnight Diner Manifesto</p>
   </section>
 
-  <!-- CTA -->
-  <section class="section-cta" id="contact">
-    <div class="cta-title reveal">
-      Stay in<br>
-      <span>the dark</span>
+  <!-- DROP / PRODUCTS -->
+  <section class="section-drop" id="drop">
+    <div class="drop-header reveal">
+      <div class="about-label">First Drop</div>
+      <h2 class="drop-title">The <em>Collection</em></h2>
+      <p class="drop-sub">Hoodies. Sweaters. Basics built to last. Coming soon.</p>
     </div>
-    <div class="cta-right reveal reveal-delay-1">
-      <p class="cta-email">Drops. Releases. Signals.</p>
-      <a href="/cdn-cgi/l/email-protection#9af3f4fcf5daf7f3fef4f3fdf2eefef3f4ffe8b4f9f5f7" class="btn">
-        <span>Get in touch →</span>
-      </a>
+    <div class="drop-grid">
+      <div class="drop-item reveal">
+        <div class="drop-thumb">
+          <div class="drop-thumb-inner"></div>
+          <div class="drop-badge">Soon</div>
+        </div>
+        <div class="drop-info">
+          <span class="drop-name">MD Heavy Hoodie</span>
+          <span class="drop-status">— Drop 01</span>
+        </div>
+      </div>
+      <div class="drop-item reveal reveal-delay-1">
+        <div class="drop-thumb">
+          <div class="drop-thumb-inner"></div>
+          <div class="drop-badge">Soon</div>
+        </div>
+        <div class="drop-info">
+          <span class="drop-name">Midnight Crew Neck</span>
+          <span class="drop-status">— Drop 01</span>
+        </div>
+      </div>
+      <div class="drop-item reveal reveal-delay-2">
+        <div class="drop-thumb">
+          <div class="drop-thumb-inner"></div>
+          <div class="drop-badge">Soon</div>
+        </div>
+        <div class="drop-info">
+          <span class="drop-name">Signal Zip Hoodie</span>
+          <span class="drop-status">— Drop 01</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOOKBOOK -->
+  <section class="section-lookbook" id="lookbook">
+    <div class="lookbook-header">
+      <div class="about-label reveal">Lookbook</div>
+      <h2 class="lookbook-title reveal">Visual<br><em>Language</em></h2>
+    </div>
+    <div class="lookbook-grid">
+      <div class="lookbook-cell tall reveal">
+        <div class="lookbook-inner"><span class="lookbook-num">01</span></div>
+      </div>
+      <div class="lookbook-col">
+        <div class="lookbook-cell reveal reveal-delay-1">
+          <div class="lookbook-inner"><span class="lookbook-num">02</span></div>
+        </div>
+        <div class="lookbook-cell reveal reveal-delay-2">
+          <div class="lookbook-inner"><span class="lookbook-num">03</span></div>
+        </div>
+      </div>
+      <div class="lookbook-cell wide reveal reveal-delay-1">
+        <div class="lookbook-inner"><span class="lookbook-num">04</span></div>
+      </div>
+    </div>
+    <p class="lookbook-note reveal">Photography arriving with Drop 01 —</p>
+  </section>
+
+  <!-- EMAIL CAPTURE -->
+  <section class="section-email" id="contact">
+    <div class="email-wrap">
+      <div class="email-left reveal">
+        <p class="email-eyebrow">// Don't miss the drop</p>
+        <h2 class="email-title">Be first.<br><span>Stay dark.</span></h2>
+        <p class="email-body">No noise. Just drops, releases, and signals when it matters. Est. 1991 — arriving soon.</p>
+      </div>
+      <div class="email-right reveal reveal-delay-1">
+        <div class="email-form">
+          <input type="email" class="email-input" placeholder="your@email.com" id="emailInput" />
+          <button class="email-btn" onclick="handleEmail()"><span>Join the list →</span></button>
+        </div>
+        <p class="email-fine">No spam. Unsubscribe anytime. Ever.</p>
+        <p class="email-confirm" id="emailConfirm"></p>
+      </div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
     <span class="footer-logo">Midnight Diner</span>
-    <span class="footer-copy">© 2025 — All rights reserved</span>
+    <div class="footer-links">
+      <a href="#drop">Drop</a>
+      <a href="#lookbook">Lookbook</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <span class="footer-copy">© 1991–2025</span>
   </footer>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -785,4 +1160,29 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-   
+           }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Email handler
+    function handleEmail() {
+      const input = document.getElementById('emailInput');
+      const confirm = document.getElementById('emailConfirm');
+      const val = input.value.trim();
+      if (val && val.includes('@')) {
+        confirm.textContent = "// Signal received. We'll be in touch.";
+        input.value = '';
+      } else {
+        confirm.textContent = '// Enter a valid email.';
+      }
+    }
+
+    document.getElementById('emailInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleEmail();
+    });
+
+  </script>
+</body>
+</html>
