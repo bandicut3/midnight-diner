@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIDNIGHT DINER — 404</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital@0;1&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #080808;
+      --white: #f0ece4;
+      --grey-mid: #3a3a3a;
+      --grey-light: #888;
+      --accent: #c8c0b0;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Share Tech Mono', monospace;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      cursor: none;
+    }
+
+    /* cursor */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--white);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+      mix-blend-mode: difference;
+    }
+    .cursor.expand { width: 40px; height: 40px; opacity: 0.4; }
+
+    /* grain */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.045;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* halftone bg */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, #222 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    /* nav */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 3rem;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.3em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    /* main content */
+    .container {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .big-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(140px, 28vw, 280px);
+      line-height: 1;
+      color: var(--grey-mid);
+      letter-spacing: 0.05em;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+      user-select: none;
+    }
+
+    .message {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: var(--white);
+      margin-top: -16px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.45s forwards;
+    }
+
+    .home-btn {
+      display: inline-block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      text-decoration: none;
+      padding: 14px 32px;
+      transition: background 0.3s, color 0.3s;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.65s forwards;
+    }
+
+    .home-btn:hover {
+      background: transparent;
+      color: var(--white);
+      outline: 1px solid var(--grey-mid);
+    }
+
+    /* footer line */
+    .foot-note {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--grey-mid);
+      text-transform: uppercase;
+      z-index: 2;
+      opacity: 0;
+      animation: fadeIn 1s ease 1s forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+
+  <nav>
+    <a href="/" class="nav-logo">Midnight Diner</a>
+  </nav>
+
+  <div class="container">
+    <div class="big-num">404</div>
+    <p class="message">You lost? Same.</p>
+    <a href="/" class="home-btn">Go home</a>
+  </div>
+
+  <span class="foot-note">Est. 1991 — Still open</span>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
+    });
+  </script>
+
+</body>
+</html>
