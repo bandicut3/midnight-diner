@@ -46,7 +46,7 @@
       top: 0;
       left: 0;
       right: 0;
-      z-index: 100;
+      z-index: 302;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -389,6 +389,25 @@
 
     .product-card:hover .card-hover-overlay { opacity: 1; }
 
+    /* view arrow on hover */
+    .card-view {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 7px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--off-white);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+    .product-card:hover .card-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* top-left tag */
     .card-tag {
       position: absolute;
@@ -640,7 +659,7 @@
     <a href="/" class="nav-logo">Midnight Diner</a>
     <div class="nav-right">
       <a href="/" class="nav-link">Est. 1991</a>
-      <a href="#" class="nav-link">Drop 01</a>
+      <a href="/drop01.html" class="nav-link">Drop 01</a>
     </div>
     <button class="nav-hamburger" id="navToggle" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -700,6 +719,7 @@
       </div>
       <div class="card-hover-overlay"></div>
       <span class="card-tag">MD-001</span>
+      <span class="card-view">View →</span>
       <div class="product-info">
         <div>
           <div class="product-name">Heavy Hoodie</div>
@@ -725,6 +745,7 @@
       </div>
       <div class="card-hover-overlay"></div>
       <span class="card-tag">MD-002</span>
+      <span class="card-view">View →</span>
       <div class="product-info">
         <div>
           <div class="product-name">Crewneck</div>
@@ -752,6 +773,7 @@
       </div>
       <div class="card-hover-overlay"></div>
       <span class="card-tag">MD-003</span>
+      <span class="card-view">View →</span>
       <div class="product-info">
         <div>
           <div class="product-name">Long Sleeve</div>

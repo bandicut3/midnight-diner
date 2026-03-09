@@ -68,7 +68,7 @@
     /* NAV */
     nav {
       position: fixed; top: 0; left: 0; right: 0;
-      z-index: 50;
+      z-index: 302;
       display: flex; align-items: center; justify-content: space-between;
       padding: 24px 40px;
       background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, transparent 100%);
@@ -630,9 +630,9 @@
 <nav>
   <a href="/" class="nav-logo">Midnight Diner</a>
   <div class="nav-right">
-    <a href="/shop.html">Drop 01</a>
+    <a href="/shop.html" style="color: var(--accent); letter-spacing:0.15em;">← Shop</a>
     <a href="/#about">About</a>
-    <a href="/shop.html" style="color: var(--accent)">Shop</a>
+    <a href="/#contact">Contact</a>
   </div>
   <button class="nav-hamburger" id="navToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -683,6 +683,11 @@
     </div>
   </div>
 </section>
+
+<!-- BREADCRUMB -->
+<div style="padding: 24px 40px; border-top: 1px solid rgba(184,179,170,0.08);">
+  <a href="/shop.html" style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--warm-gray)'" onmouseout="this.style.color='var(--mid)'">← Back to Drop 01</a>
+</div>
 
 <!-- TICKER -->
 <div class="ticker">
