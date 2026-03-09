@@ -959,10 +959,11 @@
       align-items: flex-start;
       padding: 0 2.5rem;
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
-    .nav-overlay.open { opacity: 1; pointer-events: all; }
+    .nav-overlay.open { opacity: 1; visibility: visible; pointer-events: all; }
 
     .nav-overlay-links {
       list-style: none;
