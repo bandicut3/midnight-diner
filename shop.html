@@ -62,7 +62,7 @@
     }
 
     .nav-right {
-      display: flex;
+      display: none;
       gap: 32px;
       align-items: center;
     }
@@ -540,14 +540,29 @@
     .nav-hamburger {
       display: none;
       flex-direction: column;
-      gap: 5px;
+      justify-content: center;
+      gap: 6px;
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px;
+      padding: 8px;
       z-index: 301;
       position: relative;
+      width: 40px;
+      height: 40px;
     }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #f0ece4;
+      transition: transform 0.35s ease, opacity 0.35s ease, width 0.35s ease;
+      transform-origin: center;
+      flex-shrink: 0;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
     .nav-overlay {
       position: fixed;
@@ -602,7 +617,6 @@
     /* ── RESPONSIVE — must be last to override display:none ── */
     @media (max-width: 768px) {
       nav { padding: 20px 24px; }
-      .nav-right { display: none; }
       .nav-hamburger { display: flex; }
 
       .drop-header { padding: 0 24px 60px; }
@@ -627,6 +641,11 @@
       .notify-form { max-width: 100%; width: 100%; }
 
       footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+    @media (min-width: 769px) {
+      .nav-right { display: flex; }
+      .nav-hamburger { display: none !important; }
     }
   </style>
 </head>
