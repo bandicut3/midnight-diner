@@ -520,6 +520,7 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 20px 24px; }
+      .nav-right { display: none; }
 
       .drop-header { padding: 0 24px 60px; }
 
@@ -543,10 +544,96 @@
       .notify-form { max-width: 100%; width: 100%; }
 
       footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+
+      .nav-hamburger { display: flex; }
+    }
+
+    /* ── MOBILE NAV ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 301;
+      position: relative;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--off-white);
+      transition: transform 0.35s ease, opacity 0.35s ease, width 0.35s ease;
+      transform-origin: center;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 2.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .nav-overlay.open { opacity: 1; pointer-events: all; }
+
+    .nav-overlay-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+    }
+    .nav-overlay-links li { border-bottom: 1px solid #1a1a1a; }
+    .nav-overlay-links li:first-child { border-top: 1px solid #1a1a1a; }
+    .nav-overlay-links a {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 14vw, 5rem);
+      letter-spacing: 0.04em;
+      color: var(--dim);
+      text-decoration: none;
+      padding: 0.55rem 0;
+      transition: color 0.25s ease, padding-left 0.25s ease;
+      line-height: 1;
+    }
+    .nav-overlay-links a:hover,
+    .nav-overlay-links a:active { color: var(--off-white); padding-left: 0.5rem; }
+
+    .nav-overlay-foot {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 2.5rem;
+      font-size: 0.55rem;
+      letter-spacing: 0.35em;
+      color: var(--dim);
+      text-transform: uppercase;
     }
   </style>
 </head>
 <body>
+
+  <!-- MOBILE OVERLAY -->
+  <div class="nav-overlay" id="navOverlay">
+    <ul class="nav-overlay-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/shop.html">Shop</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+    <span class="nav-overlay-foot">Est. 1991 — Still open</span>
+  </div>
 
   <!-- NAV -->
   <nav>
@@ -555,6 +642,9 @@
       <a href="/" class="nav-link">Est. 1991</a>
       <a href="#" class="nav-link">Drop 01</a>
     </div>
+    <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <!-- HERO -->
@@ -699,6 +789,22 @@
   </footer>
 
   <script>
+    // Mobile nav
+    const navToggle = document.getElementById('navToggle');
+    const navOverlay = document.getElementById('navOverlay');
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navOverlay.classList.toggle('open');
+      document.body.style.overflow = navOverlay.classList.contains('open') ? 'hidden' : '';
+    });
+    navOverlay.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navToggle.classList.remove('open');
+        navOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
     // ── Supabase config — replace with your values ──
     const SUPABASE_URL = 'https://zyjlqbihbfqbrpnijkro.supabase.co'; // e.g. https://abcdefgh.supabase.co
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5amxxYmloYmZxYnJwbmlqa3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMzY1NzksImV4cCI6MjA4ODYxMjU3OX0.yMQt-st9jjLDbyPMmqk4OmoG-Vu9Y4rV5vDpNgeTOAA';

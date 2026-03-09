@@ -923,11 +923,141 @@
     .reveal-delay-1 { transition-delay: 0.15s; }
     .reveal-delay-2 { transition-delay: 0.3s; }
     .reveal-delay-3 { transition-delay: 0.45s; }
+
+    /* ── MOBILE NAV ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 301;
+      position: relative;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--white);
+      transition: transform 0.35s ease, opacity 0.35s ease, width 0.35s ease;
+      transform-origin: center;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 2.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .nav-overlay.open { opacity: 1; pointer-events: all; }
+
+    .nav-overlay-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+    }
+    .nav-overlay-links li {
+      border-bottom: 1px solid var(--grey-dark);
+    }
+    .nav-overlay-links li:first-child { border-top: 1px solid var(--grey-dark); }
+    .nav-overlay-links a {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 14vw, 5rem);
+      letter-spacing: 0.04em;
+      color: var(--grey-mid);
+      text-decoration: none;
+      padding: 0.55rem 0;
+      transition: color 0.25s ease, padding-left 0.25s ease;
+      line-height: 1;
+    }
+    .nav-overlay-links a:hover,
+    .nav-overlay-links a:active { color: var(--white); padding-left: 0.5rem; }
+
+    .nav-overlay-foot {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 2.5rem;
+      font-size: 0.55rem;
+      letter-spacing: 0.35em;
+      color: var(--grey-mid);
+      text-transform: uppercase;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      nav { padding: 1.5rem 1.5rem; }
+
+      .hero { padding: 0 1.5rem 3rem; }
+      .hero-tag, .hero-year { display: none; }
+
+      .section-about {
+        grid-template-columns: 1fr;
+        padding: 6rem 1.5rem;
+        gap: 3rem;
+      }
+      .about-visual { height: 260px; }
+
+      .section-pillars { padding: 4rem 1.5rem; }
+      .pillars-header { flex-direction: column; align-items: flex-start; gap: 1rem; margin-bottom: 2.5rem; }
+      .pillars-note { text-align: left; }
+      .pillars-grid { grid-template-columns: 1fr; }
+
+      .section-manifesto { padding: 7rem 1.5rem; }
+
+      .section-drop { padding: 5rem 1.5rem; }
+      .drop-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+
+      .section-lookbook { padding: 5rem 1.5rem; }
+      .lookbook-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        height: auto;
+      }
+      .lookbook-cell { height: 200px; }
+      .lookbook-cell.tall, .lookbook-cell.wide { grid-row: auto; grid-column: auto; }
+      .lookbook-col { flex-direction: row; }
+      .lookbook-col .lookbook-cell { flex: 1; }
+
+      .section-email { padding: 5rem 1.5rem; }
+      .email-wrap { grid-template-columns: 1fr; gap: 3rem; }
+
+      footer { flex-direction: column; gap: 1.2rem; text-align: center; padding: 2rem 1.5rem; }
+      .footer-links { justify-content: center; }
+    }
   </style>
 </head>
 <body>
 
   <div class="cursor" id="cursor"></div>
+
+  <!-- MOBILE OVERLAY -->
+  <div class="nav-overlay" id="navOverlay">
+    <ul class="nav-overlay-links">
+      <li><a href="/shop.html">Shop</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#pillars">Work</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <span class="nav-overlay-foot">Est. 1991 — Still open</span>
+  </div>
 
   <!-- NAV -->
   <nav>
@@ -938,6 +1068,9 @@
       <li><a href="#pillars">Work</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <!-- HERO -->
@@ -1145,6 +1278,22 @@
   </footer>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Mobile nav
+    const navToggle = document.getElementById('navToggle');
+    const navOverlay = document.getElementById('navOverlay');
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navOverlay.classList.toggle('open');
+      document.body.style.overflow = navOverlay.classList.contains('open') ? 'hidden' : '';
+    });
+    navOverlay.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navToggle.classList.remove('open');
+        navOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
     // Custom cursor
     const cursor = document.getElementById('cursor');
     document.addEventListener('mousemove', e => {
