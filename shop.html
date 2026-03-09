@@ -698,5 +698,41 @@
     <span>Made at night</span>
   </footer>
 
+  <script>
+    // ── Supabase config — replace with your values ──
+    const SUPABASE_URL = 'https://zyjlqbihbfqbrpnijkro.supabase.co'; // e.g. https://abcdefgh.supabase.co
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5amxxYmloYmZxYnJwbmlqa3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMzY1NzksImV4cCI6MjA4ODYxMjU3OX0.yMQt-st9jjLDbyPMmqk4OmoG-Vu9Y4rV5vDpNgeTOAA';
+
+    async function submitEmail(email) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/emails`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email })
+      });
+      return res.ok;
+    }
+
+    document.querySelector('.notify-btn').addEventListener('click', async () => {
+      const input = document.querySelector('.notify-input');
+      const val = input.value.trim();
+      if (val && val.includes('@')) {
+        const ok = await submitEmail(val);
+        input.value = '';
+        input.placeholder = ok ? 'noted.' : 'try again.';
+      } else {
+        input.placeholder = 'enter a valid email.';
+      }
+    });
+
+    document.querySelector('.notify-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.querySelector('.notify-btn').click();
+    });
+  </script>
+
 </body>
 </html>
